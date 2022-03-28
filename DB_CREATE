@@ -1,0 +1,4 @@
+#1. yarn/npm sequelize db:create
+#2. yarn/npm sequelize migration:create --name=create=users
+#3. yarn/npm sequelize migration:create --name=create=addresses
+#4. yarn/npm sequelize db:migrate

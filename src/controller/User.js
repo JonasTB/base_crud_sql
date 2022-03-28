@@ -20,10 +20,31 @@ module.exports = {
         })
     },
 
+    getOne: async(req, res) => {
+        await User.findByPk(req.params.id).then((user) => {
+            if(!user) return res.status(400).json({ error: 'User not found' });
+            return res.status(200).json(user);
+        }).catch((err) => {
+            return res.status(400).json({ err: err });
+        })
+    },
+
+    update: async(req, res) => {
+        const { name, email } = req.body;
+        const id = await User.findByPk(req.params.id);
+        if(!id) return res.status(400).json({ error: 'User not found' });
+        await User.update({ name: name, email: email }, { where: {id: req.params.id}, returning: true }).then((user) => {
+            console.log(user);
+            return res.status(200).json(user);
+        }).catch((err) => {
+            return res.status(400).json({ err: err})
+        })
+    },
+
     delete: async(req, res) => {
-        const id = await User.findByPk(req.params.id)
+        const id = await User.findByPk(req.params.id);
+        if(!id) return res.status(400).json({ error: 'User not found' }); 
         await User.destroy({ where: { id: req.params.id }}).then(() => {
-            if(!id) return res.status(400).json({ error: 'User not found' }); 
             return res.status(200).json({ OK: 'User deleted successfully' });
         }).catch((err) => {
             return res.status(400).json({ err: err });
